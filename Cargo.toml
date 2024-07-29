@@ -1,0 +1,18 @@
+[package]
+name = "data_capture_template"
+version = "0.1.0"
+edition = "2021"
+description = "一个WebDriver爬虫模版"
+[dependencies]
+app_dirs2 = "2.5.5"
+async-trait = "0.1.81"
+clap = "4.5.11"
+derive_builder = "0.20.0"
+futures = "0.3.30"
+thirtyfour = "0.33.0"
+tokio = { version = "1.39.2", features = ["macros", "rt"] }
+indicatif = "0.17.8"
+proc-macro-workshop = {git = "https://github.com/ChengCY-2254/proc-macro-workshop.git",rev = "1e430bcce8e575e733495298fec5628e17f5625e"}
+[profile.release]
+panic = 'abort'
+
