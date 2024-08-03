@@ -1,26 +1,43 @@
-use thirtyfour::{Capabilities, DesiredCapabilities};
+use fantoccini::wd::Capabilities;
+use serde_json::json;
 
-///从字符串中选择用来抓取的浏览器
-#[inline]
-fn select_browser(text: &str) -> Result<Capabilities, &'static str> {
-    match text.to_lowercase().as_str() {
-        "chrome" => Ok(DesiredCapabilities::chrome().into()),
-        "chromium" => Ok(DesiredCapabilities::chromium().into()),
-        "edge" => Ok(DesiredCapabilities::edge().into()),
-        "firefox" => Ok(DesiredCapabilities::firefox().into()),
-        "safari" => Ok(DesiredCapabilities::safari().into()),
-        "opera" => Ok(DesiredCapabilities::opera().into()),
-        "ie" => Ok(DesiredCapabilities::internet_explorer().into()),
-        _ => Err("missing browser"),
+fn parse_proxy_caps(
+    caps: &mut Capabilities,
+    proxy_str: Option<&str>,
+) -> Result<(), &'static str> {
+    if let Some(proxy_str) = proxy_str {
+        //socks5代理
+        let proxy_obj = if proxy_str.starts_with("socks5://") {
+            let proxy_str = proxy_str.replace("socks5://","");
+            json!({
+                "proxyType": "manual",
+                "socksProxy": proxy_str,
+                "socksVersion":5
+            })
+        } else {
+            eprintln!("不是一个有效的socks5代理字符串，请检查你的配置");
+            std::process::exit(1);
+        };
+        caps.insert("proxy".to_string(), proxy_obj);
     }
+    Ok(())
 }
 #[inline]
 pub async fn get_driver(
     address: &str,
-    browser: &str,
-) -> Result<thirtyfour::WebDriver, &'static str> {
-    let capabilities = select_browser(browser)?;
-    thirtyfour::WebDriver::new(address, capabilities)
+    proxy_str: Option<&str>,
+) -> Result<fantoccini::Client, Box<dyn std::error::Error>> {
+    let mut caps = Capabilities::new();
+    parse_proxy_caps(&mut caps, proxy_str)?;
+    fantoccini::ClientBuilder::native()
+        .capabilities(caps)
+        .connect(address)
         .await
-        .map_err(|_| "连接WebDriver错误，请检查参数是否正确或对应的WebDriver是否已开启")
+        .map_err(|e| format!("连接到WebDriver出现错误，请检查参数是否正确 {}", e).into())
+}
+
+#[derive(Debug, PartialEq, Eq, Clone)]
+pub enum DownloadMode {
+    Chapter(String),
+    Directory(String),
 }

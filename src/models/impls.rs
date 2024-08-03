@@ -1,56 +1,56 @@
 use super::*;
-use crate::traits::ParseDocument;
-use async_trait::async_trait;
-use thirtyfour::error::WebDriverError;
-use thirtyfour::WebDriver;
+use crate::traits::{Driver, ParseWith};
 
-impl TryFrom<&WebDriver> for Chapters {
+impl TryFrom<&Driver> for Chapters {
     type Error = ();
 
-    fn try_from(value: &WebDriver) -> Result<Self, Self::Error> {
+    fn try_from(value: &Driver) -> Result<Self, Self::Error> {
         todo!()
     }
 }
 
-impl TryFrom<&WebDriver> for Book {
+impl TryFrom<&Driver> for Book {
     type Error = ();
 
-    fn try_from(value: &WebDriver) -> Result<Self, Self::Error> {
+    fn try_from(value: &Driver) -> Result<Self, Self::Error> {
         todo!()
     }
 }
 
-impl TryFrom<&WebDriver> for Directory {
+impl TryFrom<&Driver> for Directory {
     type Error = ();
 
-    fn try_from(value: &WebDriver) -> Result<Self, Self::Error> {
+    fn try_from(value: &Driver) -> Result<Self, Self::Error> {
         todo!()
     }
 }
 
-#[async_trait]
-impl ParseDocument for Chapters {
+impl ParseWith for Chapters {
+    type Error = ();
     type OutPut = Chapters;
 
-    async fn parse(driver: &'_ WebDriver) -> Result<Self::OutPut, WebDriverError> {
-        unimplemented!()
+    async fn parse_with(_driver: &'_ Driver) -> Result<Self::OutPut, Self::Error> {
+        todo!()
     }
+
 }
 
-#[async_trait]
-impl ParseDocument for Book {
+impl ParseWith for Book {
     type OutPut = Self;
+    type Error = ();
 
-    async fn parse(driver: &'_ WebDriver) -> Result<Self::OutPut, WebDriverError> {
-        unimplemented!()
+
+    async fn parse_with(_driver: &'_ Driver) -> Result<Self::OutPut, Self::Error> {
+        todo!()
     }
 }
 
-#[async_trait]
-impl ParseDocument for Directory {
+impl ParseWith for Directory {
     type OutPut = Directory;
+    type Error = ();
 
-    async fn parse(driver: &'_ WebDriver) -> Result<Self::OutPut, WebDriverError> {
-        unimplemented!()
+
+    async fn parse_with(_driver: &'_ Driver) -> Result<Self::OutPut, Self::Error> {
+        todo!()
     }
 }

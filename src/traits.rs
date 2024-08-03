@@ -1,25 +1,11 @@
-use async_trait::async_trait;
+#![allow(unused)]
 
-///```rust
-/// struct Demo;
-///
-/// #[async_trait]
-/// impl ParseDocument for Demo {
-///     type OutPut = ();
-///
-///     async fn parse(_driver: &'_ WebDriver) -> Result<Self::OutPut, WebDriverError> {
-///         todo!()
-///     }
-/// }
-///
-/// ```
-/// 用于解析网页文档并转换为自己的数据模型
-/// 
-///
-#[async_trait]
-pub trait ParseDocument {
+
+pub type Driver = fantoccini::Client;
+pub type By<'a> = fantoccini::Locator<'a>;
+
+pub trait ParseWith<T = Driver> {
     type OutPut;
-    async fn parse(
-        driver: &'_ thirtyfour::WebDriver,
-    ) -> Result<Self::OutPut, thirtyfour::error::WebDriverError>;
+    type Error;
+    async fn parse_with(_driver: &'_ T) -> Result<Self::OutPut, Self::Error>;
 }
