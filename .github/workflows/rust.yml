@@ -14,10 +14,20 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        # see https://github.com/actions/runner-images
         os: [macos-latest,windows-latest,ubuntu-latest]
 
     steps:
     - uses: actions/checkout@v4
+    - name: use cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cargo/bin/
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
     - name: Run tests
       run: cargo test --verbose
     - name: Build
