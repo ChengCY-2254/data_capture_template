@@ -1,3 +1,4 @@
+#![allow(unused)]
 use fantoccini::wd::Capabilities;
 use serde_json::json;
 
